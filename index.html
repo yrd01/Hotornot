@@ -1,0 +1,60 @@
+<!DOCTYPE html><html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hot or Not</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+        }
+        img {
+            max-width: 400px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .buttons {
+            margin-top: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 18px;
+            margin: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <img id="image" src="images/1.png" alt="Hot or Not">
+    <div class="buttons">
+        <button onclick="vote('Hot')">🔥 Hot</button>
+        <button onclick="vote('Not')">❌ Not</button>
+    </div>
+    <script>
+        let index = 1;
+        const totalImages = 4; // Podaj liczbę swoich obrazkówfunction vote(choice) {
+        const imageUrl = document.getElementById('image').src;
+        fetch('https://api.github.com/repos/YOUR_GITHUB_USERNAME/YOUR_REPO/contents/votes.txt', {
+            method: 'PUT',
+            headers: {
+                'Authorization': 'token YOUR_GITHUB_PERSONAL_ACCESS_TOKEN',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                message: 'User voted',
+                content: btoa(`${imageUrl} - ${choice}\n`),
+                sha: null // Jeśli plik istnieje, trzeba pobrać jego SHA
+            })
+        }).then(() => {
+            index = (index % totalImages) + 1;
+            document.getElementById('image').src = `images/${index}.png`;
+        }).catch(console.error);
+    }
+</script>
+
+</body>
+</html>
