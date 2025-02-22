@@ -1,4 +1,5 @@
-<!DOCTYPE html><html lang="pl">
+<!DOCTYPE html>
+<html lang="pl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -29,32 +30,57 @@
     </style>
 </head>
 <body>
-    <img id="image" src="images/1.png" alt="Hot or Not">
+    <img id="image" src="" alt="Hot or Not">
     <div class="buttons">
         <button onclick="vote('Hot')">🔥 Hot</button>
         <button onclick="vote('Not')">❌ Not</button>
     </div>
     <script>
-        let index = 1;
-        const totalImages = 4; // Podaj liczbę swoich obrazkówfunction vote(choice) {
-        const imageUrl = document.getElementById('image').src;
-        fetch('https://api.github.com/repos/YOUR_GITHUB_USERNAME/YOUR_REPO/contents/votes.txt', {
-            method: 'PUT',
-            headers: {
-                'Authorization': 'token YOUR_GITHUB_PERSONAL_ACCESS_TOKEN',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                message: 'User voted',
-                content: btoa(`${imageUrl} - ${choice}\n`),
-                sha: null // Jeśli plik istnieje, trzeba pobrać jego SHA
-            })
-        }).then(() => {
-            index = (index % totalImages) + 1;
-            document.getElementById('image').src = `images/${index}.png`;
-        }).catch(console.error);
-    }
-</script>
+        const repoOwner = "YOUR_GITHUB_USERNAME"; // Podmień na swój GitHub
+        const repoName = "YOUR_REPO"; // Nazwa repo
+        const branch = "main"; // Jeśli masz inny branch niż 'main', podmień
 
+        let images = [];
+
+        function getFilesFromRepo() {
+            fetch(`https://api.github.com/repos/${repoOwner}/${repoName}/contents?ref=${branch}`)
+            .then(response => response.json())
+            .then(files => {
+                images = files
+                    .map(file => file.name)
+                    .filter(name => name.match(/\.(png|jpg|jpeg)$/i)); // Pobiera tylko obrazy
+
+                if (images.length > 0) {
+                    updateImage();
+                } else {
+                    alert("Brak zdjęć w repozytorium!");
+                }
+            })
+            .catch(console.error);
+        }
+
+        function getRandomImage() {
+            if (images.length === 0) return null;
+            const randomIndex = Math.floor(Math.random() * images.length);
+            return images.splice(randomIndex, 1)[0];
+        }
+
+        function updateImage() {
+            const nextImage = getRandomImage();
+            if (nextImage) {
+                document.getElementById("image").src = `https://raw.githubusercontent.com/${repoOwner}/${repoName}/${branch}/${nextImage}`;
+            } else {
+                alert("Koniec zdjęć! Odśwież stronę, żeby zacząć od nowa.");
+            }
+        }
+
+        function vote(choice) {
+            const imageUrl = document.getElementById("image").src;
+            console.log(`Głos na: ${imageUrl} - ${choice}`); // Na publicznym repo trzeba inaczej zapisywać głosy (np. Firebase, lokalnie itp.)
+            updateImage();
+        }
+
+        window.onload = getFilesFromRepo;
+    </script>
 </body>
 </html>
