@@ -1,86 +1,54 @@
-<!DOCTYPE html>
-<html lang="pl">
+<!DOCTYPE html><html lang="pl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hot or Not</title>
+    <title>Królowa Alicja - Galeria</title>
     <style>
         body {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
+            background-color: pink;
+            text-align: center;
             font-family: Arial, sans-serif;
         }
-        img {
-            max-width: 400px;
+        h1 {
+            color: darkred;
+        }
+        .gallery {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+        }
+        .gallery img {
+            max-width: 300px;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-        .buttons {
-            margin-top: 20px;
-        }
-        button {
-            padding: 10px 20px;
-            font-size: 18px;
-            margin: 5px;
-            cursor: pointer;
         }
     </style>
 </head>
 <body>
-    <img id="image" src="" alt="Hot or Not">
-    <div class="buttons">
-        <button onclick="vote('Hot')">🔥 Hot</button>
-        <button onclick="vote('Not')">❌ Not</button>
-    </div>
-    <script>
-        const repoOwner = "yrd01"; // Podmień na swój GitHub
-        const repoName = "Hotornot"; // Nazwa repo
-        const branch = "main"; // Jeśli masz inny branch niż 'main', podmień
+    <h1>Królowa Alicja - Twoja Bogini</h1>
+    <div class="gallery" id="gallery"></div><script>
+    const repoOwner = "yrd01"; // Podmień na swój GitHub
+    const repoName = "Hotornot"; // Nazwa repoJeśli masz inny branch niż 'main', podmień
 
-        let images = [];
+    function loadGallery() {
+        fetch(`https://api.github.com/repos/${repoOwner}/${repoName}/contents?ref=${branch}`)
+        .then(response => response.json())
+        .then(files => {
+            const galleryDiv = document.getElementById("gallery");
+            
+            files.filter(file => file.name.match(/\.(png|jpg|jpeg)$/i))
+                .forEach(file => {
+                    const img = document.createElement("img");
+                    img.src = `https://raw.githubusercontent.com/${repoOwner}/${repoName}/${branch}/${file.name}`;
+                    galleryDiv.appendChild(img);
+                });
+        })
+        .catch(console.error);
+    }
+    
+    window.onload = loadGallery;
+</script>
 
-        function getFilesFromRepo() {
-            fetch(`https://api.github.com/repos/${repoOwner}/${repoName}/contents?ref=${branch}`)
-            .then(response => response.json())
-            .then(files => {
-                images = files
-                    .map(file => file.name)
-                    .filter(name => name.match(/\.(png|jpg|jpeg)$/i)); // Pobiera tylko obrazy
-
-                if (images.length > 0) {
-                    updateImage();
-                } else {
-                    alert("Brak zdjęć w repozytorium!");
-                }
-            })
-            .catch(console.error);
-        }
-
-        function getRandomImage() {
-            if (images.length === 0) return null;
-            const randomIndex = Math.floor(Math.random() * images.length);
-            return images.splice(randomIndex, 1)[0];
-        }
-
-        function updateImage() {
-            const nextImage = getRandomImage();
-            if (nextImage) {
-                document.getElementById("image").src = `https://raw.githubusercontent.com/${repoOwner}/${repoName}/${branch}/${nextImage}`;
-            } else {
-                alert("Koniec zdjęć! Odśwież stronę, żeby zacząć od nowa.");
-            }
-        }
-
-        function vote(choice) {
-            const imageUrl = document.getElementById("image").src;
-            console.log(`Głos na: ${imageUrl} - ${choice}`); // Na publicznym repo trzeba inaczej zapisywać głosy (np. Firebase, lokalnie itp.)
-            updateImage();
-        }
-
-        window.onload = getFilesFromRepo;
-    </script>
 </body>
 </html>
