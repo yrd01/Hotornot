@@ -2,7 +2,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Królowa Alicja - Galeria i Koło Fortuny</title>
+    <title>Królowa Alicja - Galeria i Zadania</title>
     <style>
         body {
             background-color: pink;
@@ -24,51 +24,7 @@
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
-        .wheel-container {
-            margin-top: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .wheel-wrapper {
-            position: relative;
-            width: 300px;
-            height: 300px;
-        }
-        #wheel {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            border: 5px solid darkred;
-            position: absolute;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            background: conic-gradient(
-                red 0deg 60deg,
-                pink 60deg 120deg,
-                darkred 120deg 180deg,
-                violet 180deg 240deg,
-                hotpink 240deg 300deg,
-                purple 300deg 360deg
-            );
-            transition: transform 3s ease-out;
-        }
-        .wheel-text {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            text-align: center;
-            font-size: 16px;
-            font-weight: bold;
-            color: white;
-        }
-        #spin-btn {
+        #task-btn {
             margin-top: 20px;
             padding: 10px 20px;
             font-size: 16px;
@@ -87,15 +43,9 @@
     </style>
 </head>
 <body>
-    <h1>Królowa Alicja - Twoja Bogini</h1>
-    <div class="gallery" id="gallery"></div><div class="wheel-container">
-    <div class="wheel-wrapper">
-        <div id="wheel"></div>
-        <div class="wheel-text" id="wheel-text"></div>
-    </div>
-    <button id="spin-btn">Zakręć</button>
-    <p id="task-result"></p>
-</div>
+    <h1>Królowa Alicja - Bogini Kacpra</h1>
+    <div class="gallery" id="gallery"></div><button id="task-btn">Losuj zadanie</button>
+<p id="task-result"></p>
 
 <script>
     const repoOwner = "yrd01";
@@ -107,7 +57,32 @@
         "Wylizuj podłogę przez 30 sekund",
         "Wysłuchaj rozkazów królowej przez 10 minut",
         "Stań na kolanach przez 5 minut",
-        "Wyślij królowej pochwalną wiadomość"
+        "Wyślij królowej pochwalną wiadomość",
+        "Podziękuj królowej za jej dominację",
+        "Klęknij i przeproś królową za swoje błędy",
+        "Całuj dłonie królowej przez minutę",
+        "Wysłuchaj 5-minutowej reprymendy bez sprzeciwu",
+        "Zaśpiewaj piosenkę o wyższości królowej",
+        "Wysłuchaj listy swoich wad od królowej",
+        "Napisz list miłosny dla królowej i odczytaj go",
+        "Przygotuj dla królowej posiłek i podaj go klęcząc",
+        "Przez 5 minut trzymaj się za kostki w pozycji uległej",
+        "Zaproś królową na kolację i opłać rachunek",
+        "Przez 2 minuty mów tylko 'Tak, Królowo'",
+        "Wymień 10 zalet królowej na głos",
+        "Ułóż wiersz wychwalający królową",
+        "Wykonaj 50 przysiadów na cześć królowej",
+        "Podaj królowej jej ulubiony napój na klęczkach",
+        "Wyznaj swoją uległość na głos i zapisz to na kartce",
+        "Uklęknij i całuj podłogę przed królową przez minutę",
+        "Przygotuj królowej kąpiel i czekaj na jej pozwolenie",
+        "Trzymaj ręce za plecami przez 15 minut jako znak oddania",
+        "Zamów prezent dla królowej i dostarcz go z szacunkiem",
+        "Zawieś zdjęcie królowej w swoim pokoju jako oznakę podziwu",
+        "Stań bez ruchu przez 10 minut, czekając na rozkaz królowej",
+        "Pisz dziennik uwielbienia królowej przez tydzień",
+        "Za każdym razem, gdy mówisz do królowej, dodawaj 'Wasza Wysokość'",
+        "Zaproś królową na jej ulubioną aktywność i uczyń ją wyjątkową"
     ];
 
     function loadGallery() {
@@ -135,25 +110,9 @@
     
     window.onload = loadGallery;
 
-    function updateWheelText() {
-        let html = "";
-        tasks.forEach((task, index) => {
-            const angle = (360 / tasks.length) * index;
-            html += `<div style="position: absolute; transform: rotate(${angle}deg) translate(100px) rotate(-${angle}deg); width: 80px; text-align: center;">${task}</div>`;
-        });
-        document.getElementById("wheel-text").innerHTML = html;
-    }
-    
-    updateWheelText();
-
-    document.getElementById("spin-btn").addEventListener("click", function() {
-        const wheel = document.getElementById("wheel");
-        const randomRotation = Math.floor(500 + Math.random() * 2000);
-        wheel.style.transform = `rotate(${randomRotation}deg)`;
-        setTimeout(() => {
-            const selectedTask = tasks[Math.floor(Math.random() * tasks.length)];
-            document.getElementById("task-result").innerText = `Twoje zadanie: ${selectedTask}`;
-        }, 3000);
+    document.getElementById("task-btn").addEventListener("click", function() {
+        const randomTask = tasks[Math.floor(Math.random() * tasks.length)];
+        document.getElementById("task-result").innerText = `Twoje zadanie: ${randomTask}`;
     });
 </script>
 
