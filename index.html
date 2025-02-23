@@ -26,12 +26,16 @@
         }
         .wheel-container {
             margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
         #wheel {
             width: 300px;
             height: 300px;
             border-radius: 50%;
             border: 5px solid darkred;
+            position: relative;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -48,6 +52,14 @@
             font-weight: bold;
             text-align: center;
             transition: transform 3s ease-out;
+        }
+        .wheel-text {
+            position: absolute;
+            width: 100%;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
         }
         #spin-btn {
             margin-top: 20px;
@@ -70,8 +82,10 @@
 <body>
     <h1>Królowa Alicja - Twoja Bogini</h1>
     <div class="gallery" id="gallery"></div><div class="wheel-container">
-    <div id="wheel">Kliknij, aby zakręcić</div>
-    <button id="spin-btn">Zakręć kołem</button>
+    <div id="wheel">
+        <div class="wheel-text">Zakręć kołem</div>
+    </div>
+    <button id="spin-btn">Zakręć</button>
     <p id="task-result"></p>
 </div>
 
@@ -116,11 +130,13 @@
 
     document.getElementById("spin-btn").addEventListener("click", function() {
         const wheel = document.getElementById("wheel");
+        const wheelText = document.querySelector(".wheel-text");
         const randomRotation = Math.floor(500 + Math.random() * 2000);
         wheel.style.transform = `rotate(${randomRotation}deg)`;
         setTimeout(() => {
             const selectedTask = tasks[Math.floor(Math.random() * tasks.length)];
             document.getElementById("task-result").innerText = `Twoje zadanie: ${selectedTask}`;
+            wheelText.innerText = selectedTask;
         }, 3000);
     });
 </script>
